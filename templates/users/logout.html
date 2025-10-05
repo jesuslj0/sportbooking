@@ -1,0 +1,7 @@
+{% extends "layout/base.html" %}
+{% block title %}Logout{% endblock %}
+{% block content %}
+  <h2>Hasta pronto!</h2>
+  <p>Has cerrado sesión correctamente.</p>
+  <a href="{% url 'login' %}">Volver a iniciar sesión</a>
+{% endblock %}

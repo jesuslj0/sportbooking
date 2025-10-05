@@ -1,0 +1,31 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}
+    Pistas
+{% endblock %}
+
+{% block navbar_brand %}
+    SportBooking
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1 class="mb-4">Pistas disponibles</h1>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for court in courts %}
+    <div class="col mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ court.name }}</h5>
+          <p class="card-text text-muted">
+            Tipo: {{ court.get_type_display }}
+          </p>
+          <a href="#" class="btn btn-primary w-100">Ver detalles</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

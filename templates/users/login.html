@@ -1,0 +1,16 @@
+{% extends 'layout/base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block navbar_brand %}
+    SportBooking
+{% endblock %}
+
+{% block content %}
+  <h2>Login</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-primary"type="submit">Login</button>
+  </form>
+  <p class="mt-2">¿No tienes cuenta? <a href="{% url 'register' %}">Regístrate aquí</a></p>
+{% endblock %}

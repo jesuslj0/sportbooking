@@ -8,6 +8,8 @@ class Court(models.Model):
         ("tennis", "Tenis"),
         ("padel", "Pádel"),
         ("basket", "Baloncesto"),
+        ("racquetball", "Frontenis"),
+        ("waterpool", "Piscina")
     ]
 
     name = models.CharField(max_length=100)
@@ -16,6 +18,10 @@ class Court(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.get_type_display()})"
+    
+    class Meta:
+        verbose_name = "Pista"
+        verbose_name_plural = "Pistas"
 
 
 class Reservation(models.Model):
@@ -34,6 +40,8 @@ class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        verbose_name = "Reserva"
+        verbose_name_plural = "Reservas"
         unique_together = ("court", "date", "start_time", "end_time")  # evita solapamientos exactos
         ordering = ["-date", "start_time"]
 

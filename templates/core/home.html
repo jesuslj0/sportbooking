@@ -1,0 +1,24 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block navbar_brand %}
+    SportBooking
+{% endblock %}
+
+{% block content %}
+<div>
+    <div class="row">
+        <div class="col-md-6">
+            {% load static %}
+            <img src="{% static 'img/hero-tennis-court.jpg' %}" alt="Cancha de Tenis" class="img-fluid">
+        </div>
+        <div class="col-md-6 text-start d-flex flex-column justify-content-center">
+            <h1 class="mb-4">Bienvenido al sistema de reservas deportivas</h1>
+            <p class="lead">Elige tu pista favorita y reserva en segundos.</p>
+            <a href="{% url 'reservation:pistas' %}" class="btn btn-primary btn-lg mt-3 w-50">Ver pistas disponibles</a>
+        </div>
+    </div>
+{% endblock %}
