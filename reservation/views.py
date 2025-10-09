@@ -8,3 +8,10 @@ def courts_view(request):
         'courts': courts
     }
     return render(request, 'reservation/courts.html', context)
+
+def court_detail_view(request, pk):
+    court = Court.objects.get(pk=pk)
+    context = {
+        'court': court
+    }
+    return render(request, 'reservation/court_detail.html', context)

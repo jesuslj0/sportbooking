@@ -20,7 +20,7 @@
           <p class="card-text text-muted">
             Tipo: {{ court.get_type_display }}
           </p>
-          <a href="#" class="btn btn-primary w-100">Ver detalles</a>
+          <a href="{% url 'reservation:pista' court.pk %}" class="btn btn-primary w-100">Ver detalles</a>
         </div>
       </div>
     </div>

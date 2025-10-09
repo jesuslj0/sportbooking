@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="container">
   <h2>Login</h2>
   <form method="post">
     {% csrf_token %}
@@ -13,4 +14,5 @@
     <button class="btn btn-primary"type="submit">Login</button>
   </form>
   <p class="mt-2">¿No tienes cuenta? <a href="{% url 'register' %}">Regístrate aquí</a></p>
+</div>
 {% endblock %}
