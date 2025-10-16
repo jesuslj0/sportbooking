@@ -16,11 +16,27 @@
     <div class="col mb-4">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
+          {% load static %}
+          {% if court.type == 'football' %}
+            <img src="{% static 'img/court-football.jpg' %}" class="card-img-top mb-2" alt="Pista de fútbol" style="height: 200px; object-fit: cover;">
+          {% elif court.type == 'tennis' %}
+            <img src="{% static 'img/court-tennis.jpg' %}" class="card-img-top mb-2" alt="Pista de tenis" style="height: 200px; object-fit: cover;">
+          {% elif court.type == 'padel' %}
+            <img src="{% static 'img/court-padel.jpg' %}" class="card-img-top mb-2" alt="Pista de pádel" style="height: 200px; object-fit: cover;">
+          {% elif court.type == 'basket' %}
+          <img src="{% static 'img/court-basket.jpg' %}" class="card-img-top mb-2" alt="Pista de baloncesto" style="height: 200px; object-fit: cover;">
+          {% elif court.type == 'racquetball' %}
+          <img src="{% static 'img/court-racquetball.jpg' %}" class="card-img-top mb-2" alt="Pista de frontenis" style="height: 200px; object-fit: cover;">
+          {% elif court.type == 'waterpool' %}
+          <img src="{% static 'img/court-waterpool.jpg' %}" class="card-img-top mb-2" alt="Pista de frontenis" style="height: 200px; object-fit: cover;">
+          {% else %}
+            <img src="{% static 'img/hero-tennis-court.jpg' %}" class="card-img-top mb-2" alt="Pista" style="height: 200px; object-fit: cover;">
+          {% endif %}
           <h5 class="card-title">{{ court.name }}</h5>
           <p class="card-text text-muted">
             Tipo: {{ court.get_type_display }}
           </p>
-          <a href="{% url 'reservation:pista' court.pk %}" class="btn btn-primary w-100">Ver detalles</a>
+          <a href="{% url 'reservas:pista' court.pk %}" class="btn btn-primary w-100">Ver detalles</a>
         </div>
       </div>
     </div>

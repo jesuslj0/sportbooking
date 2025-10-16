@@ -12,16 +12,47 @@
     <h4>Tipo: <span class="badge bg-primary text-white">{{ court.get_type_display }}</span></h4>
     <h4>Ubicación: <span class="badge bg-secondary text-white">{{ court.location }}</span></h4>
   </div>
+  {% load static %}
+  {% if court.type == "football" %}
+      <img src="{% static 'img/court-football.jpg' %}" alt="Cancha de Fútbol" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
+  {% elif court.type == "tennis" %}
+      <img src="{% static 'img/court-tennis.jpg' %}" alt="Cancha de Tenis" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
+  {% elif court.type == "padel" %}
+      <img src="{% static 'img/court-padel.jpg' %}" alt="Cancha de Pádel" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
+  {% elif court.type == "basket" %}
+      <img src="{% static 'img/court-basket.jpg' %}" alt="Cancha de Baloncesto" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
+  {% elif court.type == "racquetball" %}
+      <img src="{% static 'img/court-racquetball.jpg' %}" alt="Cancha de Frontenis" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
+  {% elif court.type == "waterpool" %}
+      <img src="{% static 'img/court-waterpool.jpg' %}" alt="Piscina" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
+  {% else %}
+      <img src="https://via.placeholder.com/200" alt="Imagen de la Pista" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
+  {% endif %}
   <div class="card">
         <div class="card-body">
           <h5 class="card-title">Reservas</h5>
           {% if reservations %}
           <ul class="list-group">
             {% for reservation in reservations %}
-            <li class="list-group-item">
-              <strong>Usuario:</strong> {{ reservation.user.username }}<br>
-              <strong>Inicio:</strong> {{ reservation.start_time }}<br>
-              <strong>Fin:</strong> {{ reservation.end_time }}
+            <li class="list-group-item" style="position: relative">
+              <div class="d-flex" style="gap: 10px">
+                <div>Usuario: <strong>{{ reservation.user.username }}</strong></div>
+                <div>Fecha: <strong>{{ reservation.date|date:"d/m" }}</strong></div> 
+              </div>
+              <strong>Inicio:</strong> {{ reservation.start_time|time:"H:i" }}<br>
+              <strong>Fin:</strong> {{ reservation.end_time|time:"H:i" }}<br>
+              <div style="position: absolute; top: 10px; right: 20px">
+                <span class="text-muted">Estado:</span>
+                {% if reservation.status == 'confirmed' %}
+                  <span class="badge bg-success">Confirmada</span>
+                {% elif reservation.status == 'pending' %}
+                  <span class="badge bg-warning text-dark">Pendiente</span>
+                {% elif reservation.status == 'cancelled' %}
+                  <span class="badge bg-danger">Cancelada</span>
+                {% else %}
+                  <span class="badge bg-secondary">Desconocido</span>
+                {% endif %}
+              </div>
             </li>
             {% endfor %}
           </ul>

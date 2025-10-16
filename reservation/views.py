@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from .models import Court
+from .models import Court, Reservation
 
 # Create your views here.
 def courts_view(request):
-    courts = Court.objects.all()
+    courts = Court.objects.all().order_by('type')
     context = {
         'courts': courts
     }
@@ -11,7 +11,10 @@ def courts_view(request):
 
 def court_detail_view(request, pk):
     court = Court.objects.get(pk=pk)
+    reservations = Reservation.objects.filter(court = court)
+
     context = {
-        'court': court
+        'court': court,
+        'reservations': reservations
     }
     return render(request, 'reservation/court_detail.html', context)

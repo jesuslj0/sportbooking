@@ -10,15 +10,15 @@
 
 {% block content %}
 <div>
-    <div class="row">
-        <div class="col-md-6">
+    <div class="d-flex justify-content-center" style="background-color: #2d9ff0ae;">
+        <div class="col-md-9" style="position: relative;">
             {% load static %}
-            <img src="{% static 'img/hero-tennis-court.jpg' %}" alt="Cancha de Tenis" class="img-fluid">
-        </div>
-        <div class="col-md-6 text-start d-flex flex-column justify-content-center">
-            <h1 class="mb-4">Bienvenido al sistema de reservas deportivas</h1>
-            <p class="lead">Elige tu pista favorita y reserva en segundos.</p>
-            <a href="{% url 'reservation:pistas' %}" class="btn btn-primary btn-lg mt-3 w-50">Ver pistas disponibles</a>
+            <img src="{% static 'img/hero-tennis-court.jpg' %}" alt="Cancha de Tenis" class="img-fluid" style="filter: brightness(0.7)">
+            <div style="position: absolute; top: 30px; left: 50px; color: white;">
+                <h1 class="mb-4">Sistema de reservas deportivas</h1>
+                <p class="lead">Elige tu pista favorita y reserva en segundos.</p>
+                <a href="{% url 'reservas:pistas' %}" class="btn btn-primary btn-lg mt-3">Ver pistas disponibles</a>
+            </div>
         </div>
     </div>
 {% endblock %}
