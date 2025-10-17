@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Court, Reservation
+from .models import Court, Reservation, CourtSchedule
 
 @admin.register(Court)
 class CourtAdmin(admin.ModelAdmin):
@@ -18,3 +18,12 @@ class ReservationAdmin(admin.ModelAdmin):
     ordering = ("-date", "start_time")
     verbose_name = "Reserva"
     verbose_name_plural = "Reservas"
+
+@admin.register(CourtSchedule)
+class CourtScheduleAdmin(admin.ModelAdmin):
+    list_display = ("court", "day_of_week", "start_time", "end_time")
+    list_filter = ("day_of_week", "court")
+    search_fields = ("court__name",)
+    ordering = ("day_of_week", "start_time")
+    verbose_name = "Horario de Pista"
+    verbose_name_plural = "Horarios de Pista"

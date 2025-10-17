@@ -28,38 +28,67 @@
   {% else %}
       <img src="https://via.placeholder.com/200" alt="Imagen de la Pista" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
   {% endif %}
-  <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Reservas</h5>
-          {% if reservations %}
-          <ul class="list-group">
-            {% for reservation in reservations %}
-            <li class="list-group-item" style="position: relative">
-              <div class="d-flex" style="gap: 10px">
-                <div>Usuario: <strong>{{ reservation.user.username }}</strong></div>
-                <div>Fecha: <strong>{{ reservation.date|date:"d/m" }}</strong></div> 
-              </div>
-              <strong>Inicio:</strong> {{ reservation.start_time|time:"H:i" }}<br>
-              <strong>Fin:</strong> {{ reservation.end_time|time:"H:i" }}<br>
-              <div style="position: absolute; top: 10px; right: 20px">
-                <span class="text-muted">Estado:</span>
-                {% if reservation.status == 'confirmed' %}
-                  <span class="badge bg-success">Confirmada</span>
-                {% elif reservation.status == 'pending' %}
-                  <span class="badge bg-warning text-dark">Pendiente</span>
-                {% elif reservation.status == 'cancelled' %}
-                  <span class="badge bg-danger">Cancelada</span>
-                {% else %}
-                  <span class="badge bg-secondary">Desconocido</span>
-                {% endif %}
-              </div>
-            </li>
+  <div class="container">
+    <h5>Horario</h5>
+    <div class="table-responsive">
+      <table class="table table-bordered mb-4">
+        <thead>
+          <tr>
+            {% for day_id, day_name in days %}
+              <th>{{ day_name }}</th>
             {% endfor %}
-          </ul>
-          {% else %}
-          <p class="card-text">Aún no hay reservas para esta pista.</p>
-          {% endif %}
-        </div>
-      </div>
-</div>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {% load schedule_tags %}
+            {% for day_id, day_name in days %}
+                <td>
+                    {% with schedules=grouped|dict_get:day_id %}
+                        {% if schedules %}
+                            {% for s in schedules %}
+                                {{ s.start_time|time:"H:i" }} - {{ s.end_time|time:"H:i" }}<br>
+                            {% endfor %}
+                        {% else %}
+                            <em>Sin horarios / Cerrado</em>
+                        {% endif %}
+                    {% endwith %}
+                </td>
+            {% endfor %}
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="container">
+      <h5 class="card-title">Reservas recientes</h5>
+      {% if reservations %}
+      <ul class="list-group">
+        {% for reservation in reservations %}
+        <li class="list-group-item" style="position: relative">
+          <div class="d-flex" style="gap: 10px">
+            <div>Usuario: <strong>{{ reservation.user.username }}</strong></div>
+            <div>Fecha: <strong>{{ reservation.date|date:"d/m" }}</strong></div> 
+          </div>
+          <strong>Inicio:</strong> {{ reservation.start_time|time:"H:i" }}<br>
+          <strong>Fin:</strong> {{ reservation.end_time|time:"H:i" }}<br>
+          <div style="position: absolute; top: 10px; right: 20px">
+            <span class="text-muted">Estado:</span>
+            {% if reservation.status == 'confirmed' %}
+              <span class="badge bg-success">Confirmada</span>
+            {% elif reservation.status == 'pending' %}
+              <span class="badge bg-warning text-dark">Pendiente</span>
+            {% elif reservation.status == 'cancelled' %}
+              <span class="badge bg-danger">Cancelada</span>
+            {% else %}
+              <span class="badge bg-secondary">Desconocido</span>
+            {% endif %}
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="card-text">Aún no hay reservas para esta pista.</p>
+      {% endif %}
+  </div>
 {% endblock %}

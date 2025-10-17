@@ -47,3 +47,28 @@ class Reservation(models.Model):
 
     def __str__(self):
         return f"{self.court} - {self.date} {self.start_time}-{self.end_time}"
+
+class CourtSchedule(models.Model):
+    court = models.ForeignKey(Court, on_delete=models.CASCADE, related_name='schedules')
+    day_of_week = models.IntegerField(
+        choices=[
+            (0, "Lunes"),
+            (1, "Martes"),
+            (2, "Miércoles"),
+            (3, "Jueves"),
+            (4, "Viernes"),
+            (5, "Sábado"),
+            (6, "Domingo"),
+        ]
+    )
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+
+    class Meta:
+        verbose_name = "Horario de Pista"
+        verbose_name_plural = "Horarios de Pistas"
+        unique_together = ("court", "day_of_week", "start_time", "end_time")
+        ordering = ["day_of_week", "start_time"]
+
+    def __str__(self):
+        return f"{self.court} - {self.get_day_of_week_display()} {self.start_time}-{self.end_time}"
