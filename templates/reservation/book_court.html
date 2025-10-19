@@ -1,0 +1,73 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Reserva de {{court.name}}{% endblock %}
+{% block navbar_brand %}SportBooking{% endblock %}
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="container">
+    <h4>Complete el formulario de reserva</h4>
+    <form method="post" style="max-width: 500px;">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button class="btn btn-primary" type="submit">Confirmar</button>
+    </form>
+</div>
+{% endblock %}
+{% block scripts %}
+  {{ block.super }}
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const dateInput = document.getElementById("id_date");
+    const daySelect = document.getElementById("id_day_of_week");
+    const scheduleSelect = document.getElementById("id_schedule_time");
+    const courtId = "{{ court.id }}";
+
+    const jsToDjangoDay = day => {
+      day = Number(day);
+      return day === 0 ? 6 : (day-1);
+    }
+
+    function loadSchedules(dayId) {
+      fetch(`/reservas/schedules/${courtId}/${dayId}`)
+        .then(response => {
+          if (!response.ok) throw new Error("HTTP " + response.status);
+          return response.json();
+        })
+        .then(data => {
+          scheduleSelect.innerHTML = "";
+          if (data.length === 0) {
+            const opt = document.createElement("option");
+            opt.text = "No hay horarios disponibles";
+            opt.disabled = true;
+            opt.selected = true;
+            scheduleSelect.add(opt);
+            return;
+          }
+          data.forEach(s => {
+            const opt = document.createElement("option");
+            opt.value = s.id;
+            opt.text = s.text;
+            scheduleSelect.add(opt);
+          });
+        })
+        .catch(err => console.error("Error al cargar horarios:", err));
+    }
+
+    daySelect.addEventListener("change", function () {
+      const selectedDay = this.value;
+      if (selectedDay) loadSchedules(selectedDay);
+    });
+
+    dateInput.addEventListener("change", function () {
+      if (!this.value) return;
+      const parts = this.value.split("-");
+      const date = new Date(parts[0], parts[1]-1, parts[2]); 
+      const dayOfWeek = jsToDjangoDay(date.getDay());
+
+      daySelect.value = dayOfWeek;
+      loadSchedules(dayOfWeek);
+    });
+  });
+
+  </script>
+{% endblock %}

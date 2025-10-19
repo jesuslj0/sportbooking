@@ -23,9 +23,6 @@
                     <a class="nav-link" href="{% url 'reservas:pistas' %}">Pistas</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Horarios</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="#">Contacto</a>
                 </li>
             </ul>
@@ -44,6 +41,13 @@
     </nav>
 
     <div class="pt-4">
+        {% if messages %}
+        <ul class="messages" style="list-style: none;">
+            {% for message in messages %}
+                    <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
         {% block content %}
         <h1>Welcome to the Base Template</h1>
         <p>This is a basic template to get you started.</p>
@@ -51,6 +55,8 @@
     </div>
 
     {% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     {% endblock %}
 </body>

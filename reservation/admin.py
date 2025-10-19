@@ -12,10 +12,10 @@ class CourtAdmin(admin.ModelAdmin):
 
 @admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
-    list_display = ("court", "user", "date", "start_time", "end_time", "status")
-    list_filter = ("status", "date", "court")
-    search_fields = ("user__username", "court__name")
-    ordering = ("-date", "start_time")
+    list_display = ("user", "date", "schedule", "status")
+    list_filter = ("status", "date", "schedule__court")
+    search_fields = ("user__username", "schedule__court_name")
+    ordering = ("-date", "schedule__start_time")
     verbose_name = "Reserva"
     verbose_name_plural = "Reservas"
 

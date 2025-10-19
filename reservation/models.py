@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class Court(models.Model):
     TYPE_CHOICES = [
         ("football", "Fútbol"),
@@ -23,30 +22,6 @@ class Court(models.Model):
         verbose_name = "Pista"
         verbose_name_plural = "Pistas"
 
-
-class Reservation(models.Model):
-    STATUS_CHOICES = [
-        ("pending", "Pendiente"),
-        ("confirmed", "Confirmada"),
-        ("cancelled", "Cancelada"),
-    ]
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    court = models.ForeignKey(Court, on_delete=models.CASCADE)
-    date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        verbose_name = "Reserva"
-        verbose_name_plural = "Reservas"
-        unique_together = ("court", "date", "start_time", "end_time")  # evita solapamientos exactos
-        ordering = ["-date", "start_time"]
-
-    def __str__(self):
-        return f"{self.court} - {self.date} {self.start_time}-{self.end_time}"
 
 class CourtSchedule(models.Model):
     court = models.ForeignKey(Court, on_delete=models.CASCADE, related_name='schedules')
@@ -72,3 +47,26 @@ class CourtSchedule(models.Model):
 
     def __str__(self):
         return f"{self.court} - {self.get_day_of_week_display()} {self.start_time}-{self.end_time}"
+    
+
+class Reservation(models.Model):
+    STATUS_CHOICES = [
+        ("pending", "Pendiente"),
+        ("confirmed", "Confirmada"),
+        ("cancelled", "Cancelada"),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    schedule = models.ForeignKey(CourtSchedule, on_delete=models.CASCADE)
+    date = models.DateField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Reserva"
+        verbose_name_plural = "Reservas"
+        unique_together = ("date", "schedule")
+        ordering = ["-date", "schedule__start_time"]
+
+    def __str__(self):
+        return f"{self.schedule.court} - {self.date} {self.schedule.start_time}-{self.schedule.end_time}"

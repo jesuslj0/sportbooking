@@ -8,59 +8,68 @@
 {% block content %}
 <div class="container mt-5">
   <h1 class="mb-4">{{ court.name }}</h1>
-  <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex justify-content-start align-items-center mb-4" style="gap: 30px">
     <h4>Tipo: <span class="badge bg-primary text-white">{{ court.get_type_display }}</span></h4>
     <h4>Ubicación: <span class="badge bg-secondary text-white">{{ court.location }}</span></h4>
   </div>
-  {% load static %}
-  {% if court.type == "football" %}
-      <img src="{% static 'img/court-football.jpg' %}" alt="Cancha de Fútbol" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
-  {% elif court.type == "tennis" %}
-      <img src="{% static 'img/court-tennis.jpg' %}" alt="Cancha de Tenis" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
-  {% elif court.type == "padel" %}
-      <img src="{% static 'img/court-padel.jpg' %}" alt="Cancha de Pádel" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
-  {% elif court.type == "basket" %}
-      <img src="{% static 'img/court-basket.jpg' %}" alt="Cancha de Baloncesto" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
-  {% elif court.type == "racquetball" %}
-      <img src="{% static 'img/court-racquetball.jpg' %}" alt="Cancha de Frontenis" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
-  {% elif court.type == "waterpool" %}
-      <img src="{% static 'img/court-waterpool.jpg' %}" alt="Piscina" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
-  {% else %}
-      <img src="https://via.placeholder.com/200" alt="Imagen de la Pista" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
-  {% endif %}
-  <div class="container">
-    <h5>Horario</h5>
-    <div class="table-responsive">
-      <table class="table table-bordered mb-4">
-        <thead>
-          <tr>
-            {% for day_id, day_name in days %}
-              <th>{{ day_name }}</th>
-            {% endfor %}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            {% load schedule_tags %}
-            {% for day_id, day_name in days %}
-                <td>
+  <div class="d-flex flex-column flex-lg-row">
+    <div>
+      {% load static %}
+      {% if court.type == "football" %}
+          <img src="{% static 'img/court-football.jpg' %}" alt="Cancha de Fútbol" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
+      {% elif court.type == "tennis" %}
+          <img src="{% static 'img/court-tennis.jpg' %}" alt="Cancha de Tenis" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
+      {% elif court.type == "padel" %}
+          <img src="{% static 'img/court-padel.jpg' %}" alt="Cancha de Pádel" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
+      {% elif court.type == "basket" %}
+          <img src="{% static 'img/court-basket.jpg' %}" alt="Cancha de Baloncesto" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
+      {% elif court.type == "racquetball" %}
+          <img src="{% static 'img/court-racquetball.jpg' %}" alt="Cancha de Frontenis" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
+      {% elif court.type == "waterpool" %}
+          <img src="{% static 'img/court-waterpool.jpg' %}" alt="Piscina" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
+      {% else %}
+          <img src="https://via.placeholder.com/200" alt="Imagen de la Pista" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
+      {% endif %}
+    </div>
+    <div class="container">
+      <h5>Horarios</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered mb-4">
+          <thead>
+            <tr>
+              {% for day_id, day_name in days %}
+                <th>{{ day_name }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {% load schedule_tags %}
+              {% for day_id, day_name in days %}
+                  <td>
                     {% with schedules=grouped|dict_get:day_id %}
-                        {% if schedules %}
-                            {% for s in schedules %}
-                                {{ s.start_time|time:"H:i" }} - {{ s.end_time|time:"H:i" }}<br>
-                            {% endfor %}
-                        {% else %}
-                            <em>Sin horarios / Cerrado</em>
-                        {% endif %}
+                      {% if schedules %}
+                        {% for s in schedules %}
+                          <span class="badge rounded-pill bg-light me-1">
+                            {{ s.start_time|time:"H:i" }} - {{ s.end_time|time:"H:i" }}
+                          </span>
+                        {% endfor %}
+                      {% else %}
+                        <em>Sin horarios / Cerrado</em>
+                      {% endif %}
                     {% endwith %}
-                </td>
-            {% endfor %}
-        </tr>
-        </tbody>
-      </table>
+                  </td>
+              {% endfor %}
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <p><a class="btn btn-primary" href="{% url 'reservas:reservar' court.pk %}">Reservar pista</a></p>
     </div>
   </div>
   <div class="container">
+  </div>
+  <div class="container mb-4">
       <h5 class="card-title">Reservas recientes</h5>
       {% if reservations %}
       <ul class="list-group">
@@ -70,8 +79,8 @@
             <div>Usuario: <strong>{{ reservation.user.username }}</strong></div>
             <div>Fecha: <strong>{{ reservation.date|date:"d/m" }}</strong></div> 
           </div>
-          <strong>Inicio:</strong> {{ reservation.start_time|time:"H:i" }}<br>
-          <strong>Fin:</strong> {{ reservation.end_time|time:"H:i" }}<br>
+          <strong>Inicio:</strong> {{ reservation.schedule.start_time|time:"H:i" }}<br>
+          <strong>Fin:</strong> {{ reservation.schedule.end_time|time:"H:i" }}<br>
           <div style="position: absolute; top: 10px; right: 20px">
             <span class="text-muted">Estado:</span>
             {% if reservation.status == 'confirmed' %}
