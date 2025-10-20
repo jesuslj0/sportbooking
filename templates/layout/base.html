@@ -16,12 +16,17 @@
         </button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item active">
+                <li class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item {% if request.resolver_match.app_name == 'reservas' and request.resolver_match.url_name == 'pistas' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'reservas:pistas' %}">Pistas</a>
                 </li>
+                {% if user.is_authenticated and user.is_manager %}
+                    <li class="nav-item {% if request.resolver_match.app_name == 'reservas' and request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'reservas:admin_dashboard' %}">Panel Admin</a>
+                </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="#">Contacto</a>
                 </li>
@@ -56,8 +61,10 @@
 
     {% block scripts %}
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     {% endblock %}
 </body>
 </html>

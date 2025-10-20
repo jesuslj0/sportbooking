@@ -11,6 +11,7 @@
 {% block content %}
 <div class="container mt-5">
   <h1 class="mb-4">Pistas disponibles</h1>
+  {% if courts %}
   <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for court in courts %}
     <div class="col mb-4">
@@ -42,6 +43,11 @@
     </div>
     {% endfor %}
   </div>
+  {% else %}
+  <div class="container">
+    <h4>No existe ninguna pista.</h4>
+  </div>
+  {% endif %}
 </div>
 
 {% endblock %}

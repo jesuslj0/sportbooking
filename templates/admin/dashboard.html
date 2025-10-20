@@ -1,0 +1,90 @@
+{% extends 'layout/base.html' %}
+{% block title %}Panel de Administración{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 fw-bold">Panel de Administración</h1>
+    </div>
+    <form method="get" class="row g-2 mb-4 align-items-end">
+        <div class="col-md-3">
+            <label for="date" class="form-label">Fecha</label>
+            <input type="date" id="date" name="date" value="{{ request.GET.date }}" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <label for="status" class="form-label">Estado</label>
+            <select id="status" name="status" class="form-select">
+                <option value="">Todos</option>
+                <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>Pendiente</option>
+                <option value="confirmed" {% if request.GET.status == 'confirmed' %}selected{% endif %}>Confirmada</option>
+                <option value="cancelled" {% if request.GET.status == 'cancelled' %}selected{% endif %}>Cancelada</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="court" class="form-label">Pista</label>
+            <select id="court" name="court" class="form-select">
+                <option value="">Todas</option>
+                {% for c in courts %}
+                    <option value="{{ c.id }}" {% if request.GET.court == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-50">Filtrar</button>
+        </div>
+    </form>
+
+    {% if reservations %}
+        <div class="row g-3">
+            {% for r in reservations %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary mb-2">{{ r.schedule.court.name }}</h5>
+                        <p class="card-text mb-1"><i class="bi bi-calendar-event"></i> <strong>Fecha:</strong> {{ r.date }}</p>
+                        <p class="card-text mb-1"><i class="bi bi-clock"></i> <strong>Horario:</strong> {{ r.schedule.start_time }} - {{ r.schedule.end_time }}</p>
+                        <p class="card-text mb-1"><i class="bi bi-person"></i> <strong>Usuario:</strong> {{ r.user.username }}</p>
+                        <p class="card-text mb-1"><i class="bi bi-tag"></i> <strong>Tipo:</strong> {{ r.schedule.court.get_type_display }}</p>
+
+                        {% if r.status == 'confirmed' %}
+                            <span class="badge bg-success">Confirmada</span>
+                        {% elif r.status == 'pending' %}
+                            <span class="badge bg-warning text-dark">Pendiente</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Cancelada</span>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-light border-0 d-flex justify-content-end gap-2">
+                        <a href="{% url 'reservas:confirm_reservation' r.id %}" class="btn btn-sm btn-success mr-2">Aceptar</a>
+                        <a href="{% url 'reservas:cancel_reservation' r.id %}" data-bs-toggle="modal" data-bs-target="#cancelModal{{ r.id }}"class="btn btn-sm btn-danger">
+                            Cancelar
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="cancelModal{{ r.id }}" tabindex="-1" aria-labelledby="cancelModalLabel{{ r.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="cancelModalLabel{{ r.id }}">Confirmar cancelación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Estás seguro de que quieres cancelar permanentemente la reserva para <strong>{{ r.schedule.court.name }}</strong> el <strong>{{ r.date }}</strong> a las <strong>{{ r.schedule.start_time }} - {{ r.schedule.end_time }}</strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <a href="{% url 'reservas:cancel_reservation' r.id %}" class="btn btn-danger">Sí, cancelar</a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            No hay reservas registradas.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -3,8 +3,8 @@ from .models import Court, Reservation, CourtSchedule
 
 @admin.register(Court)
 class CourtAdmin(admin.ModelAdmin):
-    list_display = ("name", "type", "location")
-    list_filter = ("type",)
+    list_display = ("name", "type", "location", "price")
+    list_filter = ("type", "price")
     search_fields = ("name", "location")
     verbose_name = "Pista"
     verbose_name_plural = "Pistas"

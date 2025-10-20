@@ -1,5 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class Court(models.Model):
     TYPE_CHOICES = [
@@ -14,6 +16,7 @@ class Court(models.Model):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=20, choices=TYPE_CHOICES)
     location = models.CharField(max_length=200, blank=True)
+    price = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.get_type_display()})"
@@ -65,8 +68,38 @@ class Reservation(models.Model):
     class Meta:
         verbose_name = "Reserva"
         verbose_name_plural = "Reservas"
-        unique_together = ("date", "schedule")
+        unique_together = []
         ordering = ["-date", "schedule__start_time"]
 
     def __str__(self):
         return f"{self.schedule.court} - {self.date} {self.schedule.start_time}-{self.schedule.end_time}"
+    
+    def confirm(self):
+        if self.status == 'cancelled':
+            return 'cancelled'
+        
+        exist_confirmed = Reservation.objects.filter(
+            schedule=self.schedule,
+            date=self.date,
+            status='confirmed'
+        ).exclude(id=self.id).exists()
+
+        if exist_confirmed:
+            return 'other_confirmed'
+        
+        Reservation.objects.filter(
+            schedule=self.schedule,
+            date=self.date,
+            status='pending'
+        ).exclude(id=self.id).update(status='cancelada')
+
+        self.status = 'confirmed'
+        self.save()
+        return 'ok'
+
+    def cancell(self):
+        if self.status != 'cancelled':
+            self.status = 'cancelled'
+            self.save()
+
+    

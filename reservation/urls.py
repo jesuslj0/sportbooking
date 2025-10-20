@@ -1,10 +1,14 @@
 from django.urls import path
-from . import views
+from . import users_views
+from . import admin_views
 
 app_name = 'reservas'
 urlpatterns = [
-    path('pistas/', views.courts_view, name='pistas'),
-    path('pistas/<int:pk>/', views.court_detail_view, name='pista'),
-    path('reservar/<int:pk>/', views.book_court_view, name='reservar'),
-    path('schedules/<int:court_id>/<int:day_id>', views.get_schedules_by_day, name='get_schedules_by_day'),
+    path('pistas/', users_views.courts_view, name='pistas'),
+    path('pistas/<int:pk>/', users_views.court_detail_view, name='pista'),
+    path('reservar/<int:pk>/', users_views.book_court_view, name='reservar'),
+    path('schedules/<int:court_id>/<int:day_id>', users_views.get_schedules_by_day, name='get_schedules_by_day'),
+    path('admin/dashboard', admin_views.dashboard, name='admin_dashboard' ),
+    path('reserva/<int:pk>/confirmar', admin_views.confirm_reservation, name='confirm_reservation'),
+    path('reserva/<int:pk>/cancelar', admin_views.cancel_reservation, name='cancel_reservation'),
 ]
