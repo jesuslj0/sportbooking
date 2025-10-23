@@ -8,29 +8,30 @@
 {% block content %}
 <div class="container mt-5">
   <h1 class="mb-4">{{ court.name }}</h1>
-  <div class="d-flex justify-content-start align-items-center mb-4" style="gap: 30px">
+  <div class="d-flex flex-wrap justify-content-start align-items-center mb-4" style="gap: 15px">
     <h4>Tipo: <span class="badge bg-primary text-white">{{ court.get_type_display }}</span></h4>
     <h4>Ubicación: <span class="badge bg-secondary text-white">{{ court.location }}</span></h4>
     <h4>Precio: <span class="badge bg-info text-white">{{ court.price }}€</span></h4>
   </div>
-  <div class="d-flex flex-column flex-lg-row">
-    <div>
+    <div class="container text-center my-3">
       {% load static %}
-      {% if court.type == "football" %}
-          <img src="{% static 'img/court-football.jpg' %}" alt="Cancha de Fútbol" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
-      {% elif court.type == "tennis" %}
-          <img src="{% static 'img/court-tennis.jpg' %}" alt="Cancha de Tenis" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
-      {% elif court.type == "padel" %}
-          <img src="{% static 'img/court-padel.jpg' %}" alt="Cancha de Pádel" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
-      {% elif court.type == "basket" %}
-          <img src="{% static 'img/court-basket.jpg' %}" alt="Cancha de Baloncesto" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
-      {% elif court.type == "racquetball" %}
-          <img src="{% static 'img/court-racquetball.jpg' %}" alt="Cancha de Frontenis" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
-      {% elif court.type == "waterpool" %}
-          <img src="{% static 'img/court-waterpool.jpg' %}" alt="Piscina" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
-      {% else %}
-          <img src="https://via.placeholder.com/200" alt="Imagen de la Pista" class="img-fluid mx-auto d-block mb-4" style="max-width: 600px;">
-      {% endif %}
+      <div class="ratio ratio-16x9 rounded shadow-sm overflow-hidden mx-auto" style="max-width: 700px;">
+          {% if court.type == "football" %}
+              <img src="{% static 'img/court-football.jpg' %}" alt="Cancha de Fútbol" class="img-fluid w-100 h-100 object-fit-cover">
+          {% elif court.type == "tennis" %}
+              <img src="{% static 'img/court-tennis.jpg' %}" alt="Cancha de Tenis" class="img-fluid w-100 h-100 object-fit-cover">
+          {% elif court.type == "padel" %}
+              <img src="{% static 'img/court-padel.jpg' %}" alt="Cancha de Pádel" class="img-fluid w-100 h-100 object-fit-cover">
+          {% elif court.type == "basket" %}
+              <img src="{% static 'img/court-basket.jpg' %}" alt="Cancha de Baloncesto" class="img-fluid w-100 h-100 object-fit-cover">
+          {% elif court.type == "racquetball" %}
+              <img src="{% static 'img/court-racquetball.jpg' %}" alt="Cancha de Frontenis" class="img-fluid w-100 h-100 object-fit-cover">
+          {% elif court.type == "waterpool" %}
+              <img src="{% static 'img/court-waterpool.jpg' %}" alt="Piscina" class="img-fluid w-100 h-100 object-fit-cover">
+          {% else %}
+              <img src="https://via.placeholder.com/400x250" alt="Imagen de la Pista" class="img-fluid w-100 h-100 object-fit-cover">
+          {% endif %}
+      </div>
     </div>
     <div class="container">
       <h5>Horarios</h5>
@@ -83,7 +84,6 @@
           <strong>Inicio:</strong> {{ reservation.schedule.start_time|time:"H:i" }}<br>
           <strong>Fin:</strong> {{ reservation.schedule.end_time|time:"H:i" }}<br>
           <div style="position: absolute; top: 10px; right: 20px">
-            <span class="text-muted">Estado:</span>
             {% if reservation.status == 'confirmed' %}
               <span class="badge bg-success">Confirmada</span>
             {% elif reservation.status == 'pending' %}

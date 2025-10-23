@@ -76,3 +76,12 @@ def get_schedules_by_day(request, court_id, day_id):
         for s in schedules
     ]
     return JsonResponse(data, safe=False)
+
+def cancel_reservation_view(request, pk):
+    try:
+        reservation = Reservation.objects.get(pk=pk, user=request.user)
+        reservation.delete()
+        messages.success(request, 'Reserva anulada exitosamente.')
+    except Reservation.DoesNotExist:
+        messages.error(request, 'No se encontró la reserva o no tienes permiso para cancelarla.')
+    return redirect('home')

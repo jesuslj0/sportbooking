@@ -1,8 +1,9 @@
 
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from .models import Reservation, Court
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
+from .forms import CourtCreateForm
 
 def is_manager(user):
     return user.is_authenticated and user.is_manager
@@ -49,3 +50,24 @@ def cancel_reservation(request, pk):
     reserva = get_object_or_404(Reservation, pk=pk)
     reserva.cancell()
     return redirect('reservas:admin_dashboard')
+
+
+@user_passes_test(is_manager)
+def create_court_view(request):
+    if request.method == 'POST':
+        form = CourtCreateForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, 'Pista creada correctamente.')
+                return redirect('reservas:admin_dashboard')  
+            except Exception as e:
+                    messages.error(request, f'Error creando la cancha: {e}')
+        elif form.is_valid() != True:
+            messages.error(request, 'Por favor, corrige los errores en el formulario.')
+
+    else:
+        form = CourtCreateForm()
+
+    context = {'form': form}
+    return render(request, 'admin/court_form.html', context)

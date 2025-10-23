@@ -1,6 +1,6 @@
 from django.forms import ModelForm
-from reservation.models import Reservation, CourtSchedule
-from django.forms import DateInput, ChoiceField, Select, DateField
+from reservation.models import Reservation, CourtSchedule, Court
+from django import forms
 from django.core.exceptions import ValidationError
 
 DAY_CHOICES = [
@@ -14,20 +14,20 @@ DAY_CHOICES = [
 ]
 
 class BookForm(ModelForm):
-    date = DateField(
+    date = forms.DateField(
         required=True,
         label="Fecha de reserva",
-        widget=DateInput(attrs={'class': 'form-control', 'type': 'date'})
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'})
     )
-    day_of_week = ChoiceField(
+    day_of_week = forms.ChoiceField(
         choices=DAY_CHOICES, 
         required=True, 
         label="Día de la semana",
-        widget=Select(attrs={'class': 'form-control'})
+        widget=forms.Select(attrs={'class': 'form-control'})
     )
-    schedule_time = ChoiceField(
+    schedule_time = forms.ChoiceField(
         label="Horario disponible",
-        widget=Select(attrs={'class': 'form-control'})
+        widget=forms.Select(attrs={'class': 'form-control'})
     )
 
     class Meta:
@@ -72,3 +72,49 @@ class BookForm(ModelForm):
             cleaned_data['schedule_instance'] = schedule
 
         return cleaned_data
+    
+
+class CourtCreateForm(forms.ModelForm):
+    name = forms.CharField(
+        label="Nombre",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Nombre de la pista',
+            'required': True
+        })
+    )
+
+    type = forms.ChoiceField(
+        label="Tipo de pista",
+        choices=Court.TYPE_CHOICES,  
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'required': True
+        })
+    )
+
+    location = forms.CharField(
+        label="Ubicación",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ubicación (ej. Polideportivo Central)',
+            'required': True
+        })
+    )
+
+    price = forms.DecimalField(
+        label="Precio (€)",
+        min_value=0,
+        decimal_places=2,
+        max_digits=8,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Precio por hora (€)',
+            'step': '0.01',
+            'required': True
+        })
+    )
+
+    class Meta:
+        model = Court
+        fields = ['name', 'type', 'location', 'price']

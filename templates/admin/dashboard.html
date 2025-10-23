@@ -1,17 +1,20 @@
 {% extends 'layout/base.html' %}
 {% block title %}Panel de Administración{% endblock %}
+{% block navbar_brand%}SportBooking{% endblock %}
 
 {% block content %}
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0 fw-bold">Panel de Administración</h1>
+    <h1 class="h3 mb-3 fw-bold">Panel de Administración</h1>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+        <a class="btn btn-success mr-2" href="{% url 'reservas:admin_create_court' %}"><i class="bi bi-plus-circle me-2"></i> Crear Pista</a>
+        <a class="btn btn-outline-secondary" href="#"><i class="bi bi-clock me-2"></i> Crear Horario</a>
     </div>
-    <form method="get" class="row g-2 mb-4 align-items-end">
-        <div class="col-md-3">
+    <form method="get" class="row g-3 mb-4 align-items-end">
+        <div class="col-12 col-md-3">
             <label for="date" class="form-label">Fecha</label>
             <input type="date" id="date" name="date" value="{{ request.GET.date }}" class="form-control">
         </div>
-        <div class="col-md-3">
+        <div class="col-12 col-md-3">
             <label for="status" class="form-label">Estado</label>
             <select id="status" name="status" class="form-select">
                 <option value="">Todos</option>
@@ -20,7 +23,7 @@
                 <option value="cancelled" {% if request.GET.status == 'cancelled' %}selected{% endif %}>Cancelada</option>
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-12 col-md-3">
             <label for="court" class="form-label">Pista</label>
             <select id="court" name="court" class="form-select">
                 <option value="">Todas</option>
@@ -29,12 +32,13 @@
                 {% endfor %}
             </select>
         </div>
-        <div class="col-md-3">
-            <button type="submit" class="btn btn-primary w-50">Filtrar</button>
+        <div class="col-12 col-md-3">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
         </div>
     </form>
 
     {% if reservations %}
+        <h5 class="h6 mb-3 fw-bold">Lista de reservas</h5>
         <div class="row g-3">
             {% for r in reservations %}
             <div class="col-12 col-md-6 col-lg-4">
@@ -74,7 +78,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <a href="{% url 'reservas:cancel_reservation' r.id %}" class="btn btn-danger">Sí, cancelar</a>
+                        <a href="{% url 'reservas:admin_cancel_reservation' r.id %}" class="btn btn-danger">Sí, cancelar</a>
                     </div>
                     </div>
                 </div>

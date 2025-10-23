@@ -11,14 +11,81 @@
 {% block content %}
 <div>
     <div class="d-flex justify-content-center" style="background-color: #2d9ff0ae;">
-        <div class="col-md-9" style="position: relative;">
+        <div class="col-md-9 p-0" style="position: relative; min-height: 280px;">
             {% load static %}
-            <img src="{% static 'img/hero-tennis-court.jpg' %}" alt="Cancha de Tenis" class="img-fluid" style="filter: brightness(0.7)">
-            <div style="position: absolute; top: 30px; left: 50px; color: white;">
-                <h1 class="mb-4">Sistema de reservas deportivas</h1>
-                <p class="lead">Elige tu pista favorita y reserva en segundos.</p>
-                <a href="{% url 'reservas:pistas' %}" class="btn btn-primary btn-lg mt-3">Ver pistas disponibles</a>
+            <img src="{% static 'img/hero-tennis-court.jpg' %}" alt="Cancha de Tenis" class="img-fluid" style="filter: brightness(0.7); width: 100%;">
+            <div style="position: absolute; top: 15%; left: 5%; color: white; width: 90%;">
+                <h1 class="mb-2 h2">Sistema de reservas deportivas</h1>
+                <p class="lead medium">Elige tu pista favorita y reserva en segundos.</p>
+                <a href="{% url 'reservas:pistas' %}" class="btn btn-primary btn-sm mt-2">Ver pistas disponibles</a>
             </div>
         </div>
+    </div>
+    <div class="container mt-4 mb-4">
+        <h4>Tus reservas</h4>
+        {% if reservations %}
+        <ul class="list-group">
+            {% for reservation in reservations %}
+            <li class="list-group-item" style="position: relative">
+            <div class="d-flex" style="gap: 10px">
+                <div class="text-primary"><strong>{{ reservation.schedule.court.name }}</strong></div>
+                <div><strong>{{ reservation.date|date }}</strong></div> 
+            </div>
+            <strong>Inicio:</strong> {{ reservation.schedule.start_time|time:"H:i" }}<br>
+            <strong>Fin:</strong> {{ reservation.schedule.end_time|time:"H:i" }}<br>
+            <div style="position: absolute; top: 10px; right: 20px;">
+                {% if reservation.status == 'confirmed' %}
+                <span class="badge bg-success">Confirmada</span>
+                {% elif reservation.status == 'pending' %}
+                <span class="badge bg-warning text-dark">Pendiente</span>
+                {% elif reservation.status == 'cancelled' %}
+                <span class="badge bg-danger">Cancelada</span>
+                {% else %}
+                <span class="badge bg-secondary">Desconocido</span>
+                {% endif %}
+            </div>
+
+            {% if reservation.status == 'confirmed' %}
+            <button type="button" class="btn btn-sm btn-secondary mb-2 me-3" style="position: absolute; bottom: 8px; right: 20px;"
+                data-bs-toggle="modal" data-bs-target="#cancelModal{{ reservation.id }}">
+                Anular
+            </button>
+            {% else %}
+            <a href="{% url 'reservas:cancel_reservation' reservation.id %}" style="position: absolute; bottom: 8px; right: 20px;"
+            class="btn btn-sm btn-secondary mb-2 me-3">
+            Anular
+            </a>
+            {% endif %}
+
+            {% if reservation.status == 'confirmed' %}
+            <div class="modal fade" id="cancelModal{{ reservation.id }}" tabindex="-1" aria-labelledby="cancelModalLabel{{ reservation.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header bg-warning text-dark">
+                        <h5 class="modal-title" id="cancelModalLabel{{ reservation.id }}">Confirmar cancelación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        Estás a punto de <strong>anular una reserva confirmada</strong>.<br>
+                        <br>
+                        <strong>{{ reservation.schedule.court.name }}</strong><br>
+                        {{ reservation.date }} — {{ reservation.schedule.start_time|time:"H:i" }} a {{ reservation.schedule.end_time|time:"H:i" }}.
+                        <br><br>
+                        ¿Deseas continuar?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                        <a href="{% url 'reservas:cancel_reservation' reservation.id %}" class="btn btn-danger">Sí, anular</a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="card-text">Aún no tienes reservas.</p>
+        {% endif %}
     </div>
 {% endblock %}
