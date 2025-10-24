@@ -7,7 +7,7 @@
     <h1 class="h3 mb-3 fw-bold">Panel de Administración</h1>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
         <a class="btn btn-success mr-2" href="{% url 'reservas:admin_create_court' %}"><i class="bi bi-plus-circle me-2"></i> Crear Pista</a>
-        <a class="btn btn-outline-secondary" href="#"><i class="bi bi-clock me-2"></i> Crear Horario</a>
+        <a class="btn btn-outline-secondary" href="{% url 'reservas:admin_create_schedule' %}"><i class="bi bi-clock me-2"></i> Crear Horario</a>
     </div>
     <form method="get" class="row g-3 mb-4 align-items-end">
         <div class="col-12 col-md-3">

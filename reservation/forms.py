@@ -118,3 +118,35 @@ class CourtCreateForm(forms.ModelForm):
     class Meta:
         model = Court
         fields = ['name', 'type', 'location', 'price']
+
+
+class ScheduleCreateForm(forms.ModelForm):
+    court = forms.ModelChoiceField(
+        queryset=Court.objects.all(),
+        label="Pista",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    day_of_week = forms.ChoiceField(
+        choices=DAY_CHOICES,
+        label="Día de la semana",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    start_time = forms.TimeField(
+        label="Hora de inicio",
+        widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'})
+    )
+    end_time = forms.TimeField(
+        label="Hora de fin",
+        widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'})
+    )
+
+    class Meta: 
+        model = CourtSchedule
+        fields = ['court', 'day_of_week', 'start_time', 'end_time']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'initial' in kwargs and 'court' in kwargs['initial']:
+            self.fields['court'].initial = kwargs['initial']['court']
+    
+

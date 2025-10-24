@@ -1,0 +1,18 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}
+{% if schedule %}Editar horario{% else %}Nuevo horario{% endif %}{% endblock %}
+
+{% block navbar_brand %}SportBooking{% endblock %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container mt-3">
+    <h4>{% if schedule %}Edita tu horario{% else %}Completa tu nuevo horario{% endif %}</h4>
+    <form method="post" style="max-width: 500px;">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
+</div>
+{% endblock %}

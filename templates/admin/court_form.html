@@ -1,17 +1,51 @@
 {% extends 'layout/base.html' %}
 
-{% block title %}Nuevo Horario{% endblock %}
+{% block title %}
+    {% if court %}Editar pista
+    {% else %}Nueva Pista{% endif %}{% endblock %}
 
 {% block navbar_brand %}SportBooking{% endblock %}
 
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="container mt-3">
-    <h4>Completa tu nueva pista</h4>
+    <h4>{% if court %}Edita tu pista{% else %}Completa tu nueva pista{% endif %}</h4>
     <form method="post" style="max-width: 500px;">
         {% csrf_token %}
         {{ form|crispy }}
-        <button type="submit" class="btn btn-primary">Guardar </button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        {% if court %}<a class="btn btn-danger" href="{% url 'reservas:admin_delete_court' court.id %}">Eliminar</a>{% endif %}
     </form>
+        {% if court %}
+        <h4 class="mt-5">Horarios de la pista</h4>
+        {% if schedules%}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Día</th>
+                    <th>Hora de Inicio</th>
+                    <th>Hora de Fin</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for schedule in schedules.all %}
+                <tr>
+                    <td>{{ schedule.get_day_of_week_display }}</td>
+                    <td>{{ schedule.start_time|time:"H:i" }}</td>
+                    <td>{{ schedule.end_time|time:"H:i" }}</td>
+                    <td>
+                        <a href="{% url 'reservas:admin_update_schedule' schedule.id %}" class="btn btn-sm btn-warning">Editar</a>
+                        <a href="{% url 'reservas:admin_delete_schedule' schedule.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No hay horarios definidos para esta pista.</p>
+        {% endif %}
+        <a href="{% url 'reservas:admin_create_schedule' court.id %}" class="btn btn-success mt-3">Agregar Horario</a>
+        {% endif %}
 </div>
 {% endblock %}

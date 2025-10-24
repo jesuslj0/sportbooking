@@ -37,7 +37,7 @@
                     </li>
                     {% if user.is_authenticated and user.is_manager %}
                         <li class="nav-item {% if request.resolver_match.app_name == 'reservas' and request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
-                        <a class="nav-link" href="{% url 'reservas:admin_dashboard' %}">Panel Admin</a>
+                        <a class="nav-link" href="{% url 'reservas:admin_dashboard' %}">Administración</a>
                     </li>
                     {% endif %}
                     <li class="nav-item">
