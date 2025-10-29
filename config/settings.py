@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["sportbooking-fkkb.onrender.com", "www.sportbooking-fkkb.onrender.com"]
 
 
 # Application definition
