@@ -85,7 +85,8 @@ def create_court_view(request, pk=None):
 @user_passes_test(is_manager)
 def create_schedule_view(request, pk=None, court_id=None):
     schedule = get_object_or_404(CourtSchedule, pk=pk) if pk else None
-
+    court = None
+    
     if court_id:
         court = get_object_or_404(Court, pk=court_id)
 
