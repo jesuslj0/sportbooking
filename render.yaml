@@ -13,3 +13,4 @@ databases:
   - name: sportbookingdb
     engine: postgres
     plan: free
+
