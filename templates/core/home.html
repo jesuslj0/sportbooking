@@ -10,21 +10,25 @@
 
 {% block content %}
 <div>
-    <div class="d-flex justify-content-center" style="background-color: #2d9ff0ae;">
-        <div class="col-md-9 p-0" style="position: relative; min-height: 280px;">
+    <div class="d-flex justify-content-center bg-opacity-50" style="background-color: #2d9ff0ae;">
+        <div class="position-relative col-md-9 p-0 min-vh-25">
             {% load static %}
-            <img src="{% static 'img/hero-tennis-court.jpg' %}" alt="Cancha de Tenis" class="img-fluid" style="filter: brightness(0.7); width: 100%;">
-            <div style="position: absolute; top: 15%; left: 5%; color: white; width: 90%;">
-                <h1 class="mb-2 h2">Sistema de reservas deportivas</h1>
-                <p class="lead medium">Elige tu pista favorita y reserva en segundos.</p>
-                <a href="{% url 'reservas:pistas' %}" class="btn btn-primary btn-sm mt-2">Ver pistas disponibles</a>
+            <img src="{% static 'img/hero-tennis-court.jpg' %}"
+                alt="Cancha de Tenis"
+                class="img-fluid w-100"
+                style="filter: brightness(0.7);">
+
+            <div class="position-absolute top-0 start-0 translate-middle-y text-white p-3 p-md-4" style="top: 5%; left: 5%; width: 90%;">
+                <h1 class="h3 h-md-2 mb-2">Sistema de reservas deportivas</h1>
+                <p class="lead fs-5 fs-md-4 mb-3">Elige tu pista favorita y reserva en segundos.</p>
+                <a href="{% url 'reservas:pistas' %}" class="btn btn-primary btn-sm">Ver pistas disponibles</a>
             </div>
         </div>
     </div>
     <div class="container mt-4 mb-4">
         <h4>Tus reservas</h4>
         {% if reservations %}
-        <ul class="list-group">
+        <ul class="list-group"> 
             {% for reservation in reservations %}
             <li class="list-group-item" style="position: relative">
             <div class="d-flex" style="gap: 10px">
@@ -86,6 +90,23 @@
         </ul>
         {% else %}
         <p class="card-text">Aún no tienes reservas.</p>
+        {% endif %}
+    </div>
+    <div class="container mt-4 mb-4">
+        <h5>Pistas recurrentes</h5>
+        {% if recurring_courts %}
+        <ul class="list-group"> 
+            {% for court in recurring_courts %}
+            <li class="list-group-item" style="position: relative">
+            <div class="d-flex justify-content-between" style="gap: 10px">
+                <div class="text-primary"><strong>{{ court.name }}</strong> <span class="text-muted">{{ court.get_type_display }}</span></div>
+                <div></div> 
+                <a class="btn btn-primary btn-sm" href="{% url 'reservas:pista' court.id %}">Ver</a>
+            </div>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="card-text">No tienes pistas recurrentes.</p>
         {% endif %}
     </div>
 {% endblock %}
