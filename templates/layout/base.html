@@ -40,9 +40,6 @@
                         <a class="nav-link" href="{% url 'reservas:admin_dashboard' %}">Administración</a>
                     </li>
                     {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contacto</a>
-                    </li>
                 </ul>
                 <div class="d-flex justify-content-start align-items-center">
                     {% block user_info %}
@@ -72,14 +69,18 @@
             {% endblock %}
         </div>
     </main>
-    <footer class="bg-light text-center py-3" style="justify-self: flex-end;">
-        <div class="container">
+    <footer class="bg-body-tertiary border-top py-4 mt-auto">
+        <div class="container text-center">
             {% load static %}
-            <img src="{% static 'favicon/favicon-96x96.png' %}" alt="Logo" width="32" height="auto" class="mb-2">
-            <p class="mb-1">SportBooking</p>
-            <p class="mb-0">&copy; {% now "Y" %}</p>
+            <a href="/" class="d-inline-flex align-items-center mb-2 link-body-emphasis text-decoration-none" style="gap: 20px">
+                <img src="{% static 'favicon/favicon-96x96.png' %}" alt="SportBooking logo" width="36" height="36" class="me-2">
+                <span class="fw-semibold fs-5">SportBooking</span>
+            </a>
+            <p class="text-muted mb-1">Tu plataforma de reservas deportivas</p>
+            <small class="text-secondary">&copy; {% now "Y" %} SportBooking. Todos los derechos reservados.</small>
         </div>
     </footer>
+
 
     {% block scripts %}
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
